@@ -5,7 +5,7 @@ import {
   RiSearchLine,
   RiUserAddLine,
 } from 'react-icons/ri';
-const Header = () => {
+export const Header = () => {
   return (
     <Flex
       as="header"
@@ -76,5 +76,3 @@ const Header = () => {
     </Flex>
   );
 };
-
-export default Header;
