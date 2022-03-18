@@ -1,8 +1,7 @@
-import React from 'react';
 import {
   FormControl,
   FormLabel,
-  Input,
+  Input as ChackraInpunt,
   InputProps as ChackraInputProps,
 } from '@chakra-ui/react';
 
@@ -12,11 +11,11 @@ interface InputsProps extends ChackraInputProps {
   type?: React.HTMLInputTypeAttribute;
 }
 
-export const Inputs = ({ name, label, type, ...rest }: InputsProps) => {
+export const Input = ({ name, label, type, ...rest }: InputsProps) => {
   return (
     <FormControl>
       {!!label && <FormLabel htmlFor={name}>{label}</FormLabel>}
-      <Input
+      <ChackraInpunt
         id={name}
         name={name}
         type={type}

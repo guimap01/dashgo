@@ -1,5 +1,5 @@
 import { Button, Flex, Stack } from '@chakra-ui/react';
-import { Inputs } from 'components/Form/Inputs';
+import { Input } from 'components/Form';
 import type { NextPage } from 'next';
 
 const SignIn: NextPage = () => {
@@ -15,9 +15,9 @@ const SignIn: NextPage = () => {
         borderRadius={8}
       >
         <Stack spacing="4">
-          <Inputs name="email" label="E-mail" type="email" />
+          <Input name="email" label="E-mail" type="email" />
 
-          <Inputs name="password" label="Senha" type="password" />
+          <Input name="password" label="Senha" type="password" />
         </Stack>
         <Button type="submit" mt="6" colorScheme="pink" size="lg">
           Entrar
