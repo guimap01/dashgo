@@ -16,6 +16,7 @@ import {
 } from '@chakra-ui/react';
 import { FullPage, Pagination } from 'components';
 import Link from 'next/link';
+import { useEffect } from 'react';
 import { RiAddLine, RiDeleteBinLine, RiPencilLine } from 'react-icons/ri';
 
 const UsersList = () => {
@@ -23,6 +24,12 @@ const UsersList = () => {
     base: false,
     lg: true,
   });
+
+  useEffect(() => {
+    fetch('http://localhost:3000/api/users')
+      .then((resp) => resp.json())
+      .then((resp) => console.log(resp));
+  }, []);
 
   return (
     <FullPage>
