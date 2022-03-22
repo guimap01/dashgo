@@ -18,16 +18,17 @@ import {
 import { FullPage, Pagination } from 'components';
 import { useListUsers } from 'hooks/users/listUsers';
 import Link from 'next/link';
+import { useState } from 'react';
 import { RiAddLine, RiDeleteBinLine, RiPencilLine } from 'react-icons/ri';
 import { UserType } from 'services/mirage';
 
 const UsersList = () => {
-  const { data, isLoading, isFetching, error } = useListUsers();
+  const [page, setPage] = useState(1);
+  const { data, isLoading, isFetching, error } = useListUsers(page);
   const isLarge = useBreakpointValue({
     base: false,
     lg: true,
   });
-
   return (
     <FullPage>
       <Box flex="1" borderRadius={8} bg="gray.800" p="8" overflow="auto">
@@ -73,47 +74,54 @@ const UsersList = () => {
                 </Tr>
               </Thead>
               <Tbody>
-                {data?.map(({ name, email, id, created_at }: UserType) => (
-                  <Tr key={id}>
-                    <Td px={['4', '4', '6']}>
-                      <Checkbox colorScheme="pink" />
-                    </Td>
-                    <Td>
-                      <Box>
-                        <Text fontWeight="bold">{name}</Text>
-                        <Text fontSize="small" color="gray.300">
-                          {email}
-                        </Text>
-                      </Box>
-                    </Td>
-                    {isLarge && <Td>{created_at}</Td>}
-                    <Td>
-                      <Flex gap="1">
-                        <Button
-                          as="a"
-                          size="xs"
-                          fontSize="sm"
-                          colorScheme="purple"
-                          cursor="pointer"
-                        >
-                          <Icon as={RiPencilLine} />
-                        </Button>
-                        <Button
-                          as="a"
-                          size="xs"
-                          fontSize="sm"
-                          colorScheme="red"
-                          cursor="pointer"
-                        >
-                          <Icon as={RiDeleteBinLine} />
-                        </Button>
-                      </Flex>
-                    </Td>
-                  </Tr>
-                ))}
+                {data?.users?.map(
+                  ({ name, email, id, created_at }: UserType) => (
+                    <Tr key={id}>
+                      <Td px={['4', '4', '6']}>
+                        <Checkbox colorScheme="pink" />
+                      </Td>
+                      <Td>
+                        <Box>
+                          <Text fontWeight="bold">{name}</Text>
+                          <Text fontSize="small" color="gray.300">
+                            {email}
+                          </Text>
+                        </Box>
+                      </Td>
+                      {isLarge && <Td>{created_at}</Td>}
+                      <Td>
+                        <Flex gap="1">
+                          <Button
+                            as="a"
+                            size="xs"
+                            fontSize="sm"
+                            colorScheme="purple"
+                            cursor="pointer"
+                          >
+                            <Icon as={RiPencilLine} />
+                          </Button>
+                          <Button
+                            as="a"
+                            size="xs"
+                            fontSize="sm"
+                            colorScheme="red"
+                            cursor="pointer"
+                          >
+                            <Icon as={RiDeleteBinLine} />
+                          </Button>
+                        </Flex>
+                      </Td>
+                    </Tr>
+                  )
+                )}
               </Tbody>
             </Table>
-            <Pagination />
+            <Pagination
+              totalCount={data?.total || 0}
+              currentPage={page}
+              onPageChange={setPage}
+              isLoading={isLoading || isFetching}
+            />
           </>
         )}
       </Box>

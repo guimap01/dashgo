@@ -8,12 +8,16 @@ import {
   SimpleGrid,
   Stack,
 } from '@chakra-ui/react';
+import { toast } from 'react-toastify';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FullPage } from 'components';
 import { Input } from 'components/Form';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
+import { useMutation } from 'react-query';
+import { api } from 'services/api';
+import { queryClient } from 'services/queryClient';
 
 type UserFormData = {
   name: string;
@@ -36,17 +40,34 @@ const createUserFormSchema = yup.object().shape({
 
 const CreateUser = () => {
   const { push } = useRouter();
+
+  const handleRedirect = () => {
+    push('/users');
+  };
+
+  const { mutateAsync } = useMutation(
+    async (user: UserFormData) => {
+      await api.post('/users', {
+        ...user,
+        created_at: new Date().toISOString(),
+      });
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('users');
+        handleRedirect();
+      },
+      onError: () => {
+        toast.error('Ocorreu um erro, por favor tente mais tarde.');
+      },
+    }
+  );
   const { handleSubmit, register, formState } = useForm({
     resolver: yupResolver(createUserFormSchema),
   });
 
   const handleCreateUser: SubmitHandler<UserFormData> = async (data) => {
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    console.log(data);
-  };
-
-  const handleCancel = () => {
-    push('/users');
+    await mutateAsync(data);
   };
 
   return (
@@ -96,7 +117,7 @@ const CreateUser = () => {
               <Button
                 disabled={formState.isSubmitting}
                 colorScheme="whiteAlpha"
-                onClick={handleCancel}
+                onClick={handleRedirect}
               >
                 Cancelar
               </Button>
